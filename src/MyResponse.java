@@ -39,4 +39,8 @@ public class MyResponse {
     public String headerValueFor(String headerName) {
         return urlConnection.getHeaderField(headerName);
     }
+
+    public void isReceived() {
+        body();
+    }
 }

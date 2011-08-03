@@ -1,7 +1,11 @@
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
+
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 /**
 * Created by IntelliJ IDEA.
@@ -16,6 +20,7 @@ public class ServerBuilder extends MyServer{
     private String payload = "a payload";
     private String headerName = "dummy";
     private String headerValue = "value";
+    private Headers lastRequestHeaders;
 
     public ServerBuilder onPort(int port) {
         this.port = port;
@@ -36,6 +41,7 @@ public class ServerBuilder extends MyServer{
             createHttpServer(port, contextPath, new HttpHandler() {
                 public void handle(HttpExchange httpExchange) throws IOException {
                     byte[] bytes = payload.getBytes();
+                    lastRequestHeaders = httpExchange.getRequestHeaders();
                     httpExchange.getResponseHeaders().add(headerName, headerValue);
                     httpExchange.sendResponseHeaders(200, bytes.length);
                     httpExchange.getResponseBody().write(bytes);
@@ -51,5 +57,11 @@ public class ServerBuilder extends MyServer{
     public void thatReturnsAResponseHeaderOf(String headerName, String headerValue) {
         this.headerName = headerName;
         this.headerValue = headerValue;
+    }
+
+    public String getHeaderValue(String name) {
+        assertNotNull(lastRequestHeaders);
+        assertTrue(lastRequestHeaders.containsKey(name));
+        return lastRequestHeaders.get(name).get(0);  //To change body of created methods use File | Settings | File Templates.
     }
 }

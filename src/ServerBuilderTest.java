@@ -3,6 +3,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -19,6 +21,7 @@ public class ServerBuilderTest {
 
     private ServerBuilder serverBuilder;
     private MyResponse theResponse;
+    private List<Resource.ClientHeader> clientHeaders = new ArrayList<Resource.ClientHeader>();
 
     @Before
     public void setUp() throws Exception {
@@ -46,13 +49,28 @@ public class ServerBuilderTest {
     }
 
     @Test
-    public void checkHeadersReceived() throws IOException {
+    public void checkHeadersReceivedFromClient() throws IOException {
         givenATargetServer();
+        givenAClientHeaderOf("thingamy", "whatsit");
         whenAGetRequestIsPerformedOn(theTargetUri());
+        andTheResponse().isReceived();
+        assertThat(theTargetServer().getHeaderValue("thingamy"), is("whatsit"));
+    }
+
+    private MyResponse andTheResponse() {
+        return theResponse;
+    }
+
+    private ServerBuilder theTargetServer() {
+        return serverBuilder;
+    }
+
+    private void givenAClientHeaderOf(String name, String value) {
+        clientHeaders.add(new Resource.ClientHeader(name, value));
     }
 
     private void whenAGetRequestIsPerformedOn(String uri) throws IOException {
-        theResponse = new Resource(uri).getResponse();
+        theResponse = new Resource(uri).getResponse(clientHeaders);
     }
 
     private String theTargetUri() {
@@ -62,7 +80,6 @@ public class ServerBuilderTest {
     private ServerBuilder givenATargetServer() {
         return serverBuilder;
     }
-
 
 
 }

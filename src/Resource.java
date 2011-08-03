@@ -1,11 +1,8 @@
-import com.sun.net.httpserver.Headers;
-import org.omg.CORBA.portable.*;
-
 import java.io.*;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,9 +21,25 @@ public class Resource {
 
 
     public MyResponse getResponse() throws IOException {
-        URLConnection urlConnection = new URL(uri).openConnection();
-        return new MyResponse(urlConnection);
+        return getResponse(new ArrayList<ClientHeader>());
     }
 
 
+    public MyResponse getResponse(List<ClientHeader> clientHeaders) throws IOException {
+        URLConnection urlConnection = new URL(uri).openConnection();
+        for (ClientHeader clientHeader : clientHeaders) {
+            urlConnection.addRequestProperty(clientHeader.name, clientHeader.value);
+        }
+        return new MyResponse(urlConnection);
+    }
+
+    public static class ClientHeader {
+        private String name;
+        private String value;
+
+        public ClientHeader(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+    }
 }
