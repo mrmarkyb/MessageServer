@@ -40,7 +40,7 @@ public class MyResponse {
         return urlConnection.getHeaderField(headerName);
     }
 
-    public void isReceived() {
+    public void andCompletes() {
         body();
     }
 }

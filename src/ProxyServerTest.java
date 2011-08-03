@@ -49,6 +49,11 @@ public class ProxyServerTest {
         assertThat(theResponse.headerValueFor("foo"), is("hello hello"));
     }
 
+
+    @Test
+    public void passesRequestHeaders() {
+
+    }
     private void whenAGetRequestIsPerformedOn(String uri) throws IOException {
         theResponse = new Resource(uri).getResponse();
     }
