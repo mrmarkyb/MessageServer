@@ -7,14 +7,7 @@ import java.io.IOException;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
-/**
-* Created by IntelliJ IDEA.
-* User: mburnett
-* Date: 02/08/11
-* Time: 19:40
-* To change this template use File | Settings | File Templates.
-*/
-public class ServerBuilder extends MyServer{
+public class ServerBuilder extends MyServer {
     private int port = 8070;
     private String contextPath = "/context";
     private String payload = "a payload";
@@ -59,7 +52,7 @@ public class ServerBuilder extends MyServer{
         this.headerValue = headerValue;
     }
 
-    public String getHeaderValue(String name) {
+    public String receivedHeaderValueFor(String name) {
         assertNotNull(lastRequestHeaders);
         assertTrue(lastRequestHeaders.containsKey(name));
         return lastRequestHeaders.get(name).get(0);  //To change body of created methods use File | Settings | File Templates.
