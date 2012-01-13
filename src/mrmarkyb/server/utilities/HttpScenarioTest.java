@@ -1,3 +1,5 @@
+package mrmarkyb.server.utilities;
+
 import org.junit.After;
 import org.junit.Before;
 

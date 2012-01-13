@@ -1,13 +1,14 @@
+package mrmarkyb.server.utilities;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import sun.net.www.http.HttpClient;
+import com.sun.net.httpserver.HttpServer;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
+import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -23,7 +24,9 @@ import static org.junit.Assert.assertThat;
  * Time: 18:26
  * To change this template use File | Settings | File Templates.
  */
-public class ProxyServer extends MyServer {
+public class ProxyServer {
+
+    protected HttpServer httpServer;
 
     public ProxyServer(int port, String context) throws IOException {
         createHttpServer(port, context, proxyHandler());
@@ -83,4 +86,17 @@ public class ProxyServer extends MyServer {
     }
 
 
+    protected HttpServer createHttpServer(int port, String path, HttpHandler httpHandler) throws IOException {
+        httpServer = HttpServer.create(new InetSocketAddress(port), 10);
+        httpServer.createContext(path, httpHandler);
+        return httpServer;
+    }
+
+    protected void start() {
+        httpServer.start();
+    }
+
+    public void stop() {
+        httpServer.stop(0);
+    }
 }
